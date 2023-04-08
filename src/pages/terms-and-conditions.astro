@@ -1,9 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getContent } from '../services/airtable';
+
+const { seoTitle, seoDescription, title, body } = await getContent("termsAndConditions");
 ---
 
-<Layout title="Savit | Terms and Conditions">
+<Layout title={seoTitle} description={seoDescription}>
   <main>
-    <h1>Terms and Conditions</h1>  
+      <h2>{title}</h2>
+      <p>{body}</p>
   </main>
 </Layout>
