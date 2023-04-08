@@ -1,16 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getContent, getCredentials} from '../services/airtable';
+import { getContent } from '../services/airtable';
 
 const { seoTitle, seoDescription, title, body } = await getContent("termsAndConditions");
-const { name } = await getCredentials();
-
-console.log(title, name)
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
   <main>
-      <h1>{name}</h1>
       <h2>{title}</h2>
       <p>{body}</p>
   </main>

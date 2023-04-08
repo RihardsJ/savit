@@ -1,3 +1,13 @@
-  <a href="/">Home</a>
-  <a href="/quote/">Quote</a>
-  <a href="/terms-and-conditions/">Terms and Conditions</a>
+---
+import { getCredentials} from '../services/airtable';
+const { name } = await getCredentials();
+---
+
+<nav>
+  <h1>{name}</h1>
+  <ul>
+    <a href="/">Home</a>
+    <a href="/quote/">Quote</a>
+    <a href="/terms-and-conditions/">Terms and Conditions</a>
+  </ul>
+</nav>
