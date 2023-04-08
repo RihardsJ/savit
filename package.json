@@ -22,7 +22,9 @@
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "0.4.4",
+    "@typescript-eslint/eslint-plugin": "5.57.1",
     "@typescript-eslint/parser": "5.57.1",
+    "airtable": "0.11.6",
     "eslint": "8.37.0",
     "eslint-plugin-astro": "0.26.1",
     "husky": "8.0.3",

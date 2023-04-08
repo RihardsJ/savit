@@ -1,10 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import content from '../utils/content.json';
+import { getContent, getCredentials} from '../services/airtable';
 
+const { seoTitle, seoDescription, title, body } = await getContent("home");
+const {name, phone, email } = await getCredentials();
 ---
 
-<Layout title={content['meta-title']}>
+<Layout title={seoTitle} description={seoDescription}>
 	<main>
+      <h1>{name}</h1>
+      <h2>{title}</h2>
+      <p>{body}</p>
+    <aside>
+      <p>{phone}</p>
+      <p>{email}</p>
+    </aside>
 	</main>
 </Layout>
