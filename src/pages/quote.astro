@@ -1,9 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getContent, getCredentials} from '../services/airtable';
+
+const { seoTitle, seoDescription, title, body } = await getContent("quote");
+const { name } = await getCredentials();
 ---
 
-<Layout title="Savit | Quote">
+<Layout title={seoTitle} description={seoDescription}>
   <main>
-    <h1>Quote</h1>  
+      <h1>{name}</h1>
+      <h2>{title}</h2>
+      <p>{body}</p>
   </main>
 </Layout>
