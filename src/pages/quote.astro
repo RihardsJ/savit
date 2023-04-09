@@ -1,51 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Input from '../components/Input.astro'
+import QuoteForm from '../components/QuoteForm'
+
 import { getContent } from '../services/airtable';
 
-const { seoTitle, seoDescription, title, body } = await getContent("quote");
-const currentDate = new Date().toISOString().split('T')[0];
+const { seoTitle, seoDescription, title, body } = await getContent('quote');
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
   <main>
-      <h2>{title}</h2>
-      <p>{body}</p>
-      <form>
-       <Input label="Current address:" placeholder="Start typing the address or postcode..." /> 
-       <Input label="New address:" placeholder="Start typing the address or postcode..." /> 
-       <label for="estimate-moving-date">Estimate moving date:</label>
-       <input type="date" id="estimate-moving-date" name="estimate-moving-date" value={currentDate} min={currentDate} />
-       <label for="moving-size">Moving Size:</label>
-       <select name="moving-size" id="moving-size">
-          { [...new Array(9)].map((_, i) => <option value={i++}>{`${i++} Bedrooms`}</option>) }
-       </select> 
-       <label for="special-instructions">Special instructions:</label>
-       <textarea id="special-instructions" name="special-instructions" rows="4" cols="43">Please list special requirements e.g. limited parking / storage / antique furniture etc.</textarea>
-       <Input label="Your name:" /> 
-       <Input label="Email:" /> 
-       <Input label="Phone number:" /> 
-       <button>Request a price</button>
-      </form>
+    <h2>{title}</h2>
+    <p>{body}</p>
+    <QuoteForm client:load/>
   </main>
 </Layout>
 
-<script>
-  // Disable specific dates in the datepicker and highlight them in the calendar
-  const disabledDates = ["2023-04-21", "2023-04-15", "2023-04-20"];
-  const datePicker = <HTMLInputElement>document.getElementById("estimate-moving-date");
-  disabledDates.forEach(function(date) {
-    let option = document.createElement("option");
-    option.value = date;
-    option.text = date;
-    option.classList.add("disabled-date"); // add the disabled-date class to the option
-    datePicker.appendChild(option);
-  });
-
-  datePicker.addEventListener("change", function() {
-    if (disabledDates.includes(this.value)) {
-      this.value = new Date().toISOString().split('T')[0];
-      alert("This date is disabled.");
-    }
-  });
-</script>
