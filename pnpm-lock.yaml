@@ -2,32 +2,30 @@ lockfileVersion: 5.4
 
 specifiers:
   '@astrojs/react': ^2.1.1
-  '@astrojs/ts-plugin': 0.4.4
+  '@astrojs/ts-plugin': ^0.4.4
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
-  '@typescript-eslint/eslint-plugin': 5.57.1
-  '@typescript-eslint/parser': 5.57.1
-  airtable: 0.11.6
-  astro: 2.1.7
-  eslint: 8.37.0
-  eslint-plugin-astro: 0.26.1
-  husky: 8.0.3
-  lint-staged: 13.2.1
-  nodemailer: 6.9.1
-  prettier: 2.8.7
-  prettier-plugin-astro: 0.8.0
+  '@typescript-eslint/eslint-plugin': ^5.57.1
+  '@typescript-eslint/parser': ^5.57.1
+  airtable: ^0.11.6
+  astro: ^2.1.7
+  eslint: ^8.37.0
+  eslint-plugin-astro: ^0.26.1
+  husky: ^8.0.3
+  lint-staged: ^13.2.1
+  prettier: ^2.8.7
+  prettier-plugin-astro: ^0.8.0
   react: ^18.0.0
   react-dom: ^18.0.0
-  typescript: 5.0.3
+  typescript: ^5.0.3
 
 dependencies:
-  '@astrojs/react': 2.1.1_ddal5w4bzhvnvvplv3twufcima
-  '@types/react': 18.0.33
-  '@types/react-dom': 18.0.11
+  '@astrojs/react': 2.1.1_z5gax7qsno6qaf2ngprhq6e6sa
+  '@types/react': 18.0.21
+  '@types/react-dom': 18.0.6
   astro: 2.1.7
-  nodemailer: 6.9.1
-  react: 18.2.0
-  react-dom: 18.2.0_react@18.2.0
+  react: 18.0.0
+  react-dom: 18.0.0_react@18.0.0
 
 devDependencies:
   '@astrojs/ts-plugin': 0.4.4
@@ -107,7 +105,7 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/react/2.1.1_ddal5w4bzhvnvvplv3twufcima:
+  /@astrojs/react/2.1.1_z5gax7qsno6qaf2ngprhq6e6sa:
     resolution: {integrity: sha512-nIcDFnn5H4FKGoSBYXZr95RIQvpcTNRcVV1hvUQifO0F5hQsgb0PVyk6TG4JWxiPGY4Jt4MVQb5JaaDQHlHu4w==}
     engines: {node: '>=16.12.0'}
     peerDependencies:
@@ -118,10 +116,10 @@ packages:
     dependencies:
       '@babel/core': 7.21.3
       '@babel/plugin-transform-react-jsx': 7.21.0_@babel+core@7.21.3
-      '@types/react': 18.0.33
-      '@types/react-dom': 18.0.11
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
+      '@types/react': 18.0.21
+      '@types/react-dom': 18.0.6
+      react: 18.0.0
+      react-dom: 18.0.0_react@18.0.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -807,14 +805,14 @@ packages:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: false
 
-  /@types/react-dom/18.0.11:
-    resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
+  /@types/react-dom/18.0.6:
+    resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
-      '@types/react': 18.0.33
+      '@types/react': 18.0.21
     dev: false
 
-  /@types/react/18.0.33:
-    resolution: {integrity: sha512-sHxzVxeanvQyQ1lr8NSHaj0kDzcNiGpILEVt69g9S31/7PfMvNCKLKcsHw4lYKjs3cGNJjXSP4mYzX43QlnjNA==}
+  /@types/react/18.0.21:
+    resolution: {integrity: sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -2899,11 +2897,6 @@ packages:
     resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
     dev: false
 
-  /nodemailer/6.9.1:
-    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
-    engines: {node: '>=6.0.0'}
-    dev: false
-
   /normalize-path/3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -3164,18 +3157,18 @@ packages:
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  /react-dom/18.2.0_react@18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+  /react-dom/18.0.0_react@18.0.0:
+    resolution: {integrity: sha512-XqX7uzmFo0pUceWFCt7Gff6IyIMzFUn7QMZrbrQfGxtaxXZIcGQzoNpRLE3fQLnS4XzLLPMZX2T9TRcSrasicw==}
     peerDependencies:
-      react: ^18.2.0
+      react: ^18.0.0
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.0
+      react: 18.0.0
+      scheduler: 0.21.0
     dev: false
 
-  /react/18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+  /react/18.0.0:
+    resolution: {integrity: sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
@@ -3388,8 +3381,8 @@ packages:
     dependencies:
       suf-log: 2.5.3
 
-  /scheduler/0.23.0:
-    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
+  /scheduler/0.21.0:
+    resolution: {integrity: sha512-1r87x5fz9MXqswA2ERLo0EbOAU74DpIUO090gIasYTqlVoJeMcl+Z1Rg7WHz+qtPujhS/hGIt9kxZOYBV3faRQ==}
     dependencies:
       loose-envify: 1.4.0
     dev: false

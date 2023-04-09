@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import TextInput from './TextInput';
+import { sendQuoteRequest } from '../services/airtable';
 
 function QuiteForm() {
   const FIELDS = {
@@ -14,7 +15,7 @@ function QuiteForm() {
       PLACEHOLDER: 'Start typing the address or postcode...',
     },
     DATE: { LABEL: 'Estimated moving date:', SLUG: 'date' },
-    SIZE: { LABEL: 'Moving size:', SLUG: 'size' },
+    SIZE: { LABEL: 'Moving size:', SLUG: 'bedrooms' },
     INSTRUCTIONS: {
       LABEL: 'Special instructions:',
       SLUG: 'instructions',
@@ -106,11 +107,13 @@ function QuiteForm() {
         : '';
   });
 
-  const [values, dispatch] = useReducer(reducer, initialValues);
+  const [formData, dispatch] = useReducer(reducer, initialValues);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log('values sent:', values);
+    sendQuoteRequest(formData)
+      .then(() => console.log('quote sent!'))
+      .catch((error) => console.log('Error! email has not been sent!', error));
   };
 
   return (
@@ -119,14 +122,14 @@ function QuiteForm() {
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
         label={FIELDS.CURRENT_ADDRESS.LABEL}
         placeholder={FIELDS.CURRENT_ADDRESS.PLACEHOLDER}
-        value={values[FIELDS.CURRENT_ADDRESS.SLUG]}
+        value={formData[FIELDS.CURRENT_ADDRESS.SLUG]}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.NEW_ADDRESS.SLUG}
         label={FIELDS.NEW_ADDRESS.LABEL}
         placeholder={FIELDS.NEW_ADDRESS.PLACEHOLDER}
-        value={values[FIELDS.NEW_ADDRESS.SLUG]}
+        value={formData[FIELDS.NEW_ADDRESS.SLUG]}
         updateValue={dispatch}
       />
       <label htmlFor={FIELDS.DATE.SLUG}>{FIELDS.DATE.LABEL}</label>
@@ -168,19 +171,19 @@ function QuiteForm() {
       <TextInput
         slug={FIELDS.NAME.SLUG}
         label={FIELDS.NAME.LABEL}
-        value={values[FIELDS.NAME.SLUG]}
+        value={formData[FIELDS.NAME.SLUG]}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.EMAIL.SLUG}
         label={FIELDS.EMAIL.LABEL}
-        value={values[FIELDS.EMAIL.SLUG]}
+        value={formData[FIELDS.EMAIL.SLUG]}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.PHONE.SLUG}
         label={FIELDS.PHONE.LABEL}
-        value={values[FIELDS.PHONE.SLUG]}
+        value={formData[FIELDS.PHONE.SLUG]}
         updateValue={dispatch}
       />
       <button type="submit">Request a price</button>
