@@ -92,7 +92,6 @@ async function getOrders(): Promise<Date[]> {
   } catch (err) {
     console.log(err);
   }
-  console.log(orders);
   return orders;
 }
 

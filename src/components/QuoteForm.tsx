@@ -157,7 +157,7 @@ function QuiteForm() {
         </p>
         <p>
           The quote is going to be sent to your email:{' '}
-          <strong>(name.surname@gmail.com)</strong>
+          <strong>({formData[FIELDS.EMAIL.SLUG]})</strong>
         </p>
         <a href="/">
           <TickCircleIcon />
@@ -205,7 +205,10 @@ function QuiteForm() {
         minDate={CURRENT_DATE}
         excludeDates={[...reservedDates]}
         onChange={(date: Date) =>
-          dispatch({ type: FIELDS.DATE.SLUG, value: date.toISOString() })
+          dispatch({
+            type: FIELDS.DATE.SLUG,
+            value: date.toISOString().split('T')[0],
+          })
         }
       />
       <label htmlFor={FIELDS.SIZE.SLUG}>{FIELDS.SIZE.LABEL}</label>
