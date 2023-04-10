@@ -1,8 +1,15 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import TextInput from './TextInput';
+import TickCircleIcon from '../icons/tickCircle';
+
 import { sendQuoteRequest } from '../services/airtable';
 
 function QuiteForm() {
+  const [formState, setFormState] = useState({
+    type: 'input',
+    loading: false,
+  });
+
   const FIELDS = {
     CURRENT_ADDRESS: {
       LABEL: 'Current Address:',
@@ -111,10 +118,60 @@ function QuiteForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    setFormState((prevState) => ({ ...prevState, lading: true }));
     sendQuoteRequest(formData)
-      .then(() => console.log('quote sent!'))
-      .catch((error) => console.log('Error! email has not been sent!', error));
+      .then(() => {
+        setFormState((prevState) => ({ ...prevState, type: 'success' }));
+        console.log('quote sent!');
+      })
+      .catch((error) => {
+        setFormState((prevState) => ({ ...prevState, type: 'fail' }));
+        console.log('Error! email has not been sent!', error);
+      })
+      .finally(() =>
+        setFormState((prevState) => ({ ...prevState, lading: false }))
+      );
   };
+
+  if (formState.type === 'success') {
+    return (
+      <div>
+        <p>
+          All good <strong>Username!</strong>
+        </p>
+        <p>
+          Thank you for considering our services for your upcoming house move!
+        </p>
+        <p>
+          We will carefully consider your request and provide you personalised
+          price based on the information you provided!
+        </p>
+        <p>
+          The quote is going to be sent to your email:{' '}
+          <strong>(name.surname@gmail.com)</strong>
+        </p>
+        <a href="/">
+          <TickCircleIcon />
+        </a>
+      </div>
+    );
+  }
+
+  if (formState.type === 'fail') {
+    return (
+      <div>
+        <p>Ooops!</p>
+        <p>Thank you for reaching out to us about your house move.</p>
+        <p>
+          Unfortunately, we were unable to receive your request. Please try
+          again. Alternatively give us a call or send the request directly via
+          our email.
+        </p>
+        <p>We apologize for the inconvenience!</p>
+        <a href="/quote/">Try again!</a>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -186,7 +243,9 @@ function QuiteForm() {
         value={formData[FIELDS.PHONE.SLUG]}
         updateValue={dispatch}
       />
-      <button type="submit">Request a price</button>
+      <button type="submit" disabled={formState.loading}>
+        Request a price
+      </button>
     </form>
   );
 }
