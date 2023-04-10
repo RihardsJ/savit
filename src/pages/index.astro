@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PhoneIcon from '../icons/phone';
+import MailIcon from '../icons/mail';
+
 import { getContent, getCredentials} from '../services/airtable';
 
 const { seoTitle, seoDescription, title, body } = await getContent("home");
@@ -11,8 +14,8 @@ const { phone, email } = await getCredentials();
       <h2>{title}</h2>
       <p>{body}</p>
     <aside>
-      <p>{phone}</p>
-      <p>{email}</p>
+      <p><PhoneIcon />{phone}</p>
+      <p><MailIcon />{email}</p>
     </aside>
 	</main>
 </Layout>
