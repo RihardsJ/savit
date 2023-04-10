@@ -77,7 +77,11 @@ async function getOrders(): Promise<Date[]> {
   const orders: Date[] = [];
 
   try {
-    const records = await table.select().all();
+    const records = await table
+      .select({
+        filterByFormula: "OR(status = 'confirmed', status = 'block')",
+      })
+      .all();
     if (records && !!records.length) {
       records.forEach((record) => {
         if (
@@ -92,6 +96,8 @@ async function getOrders(): Promise<Date[]> {
   } catch (err) {
     console.log(err);
   }
+
+  console.log(orders);
   return orders;
 }
 
