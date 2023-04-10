@@ -1,4 +1,4 @@
-import Airtable from "airtable";
+import Airtable from 'airtable';
 
 interface Content {
   [key: string]: string;
@@ -10,9 +10,12 @@ interface Credentials {
 
 function getTable(tableName: string) {
   Airtable.configure({
-    apiKey: import.meta.env.AIRTABLE_TOKEN,
+    apiKey:
+      import.meta.env.AIRTABLE_TOKEN || import.meta.env.PUBLIC_AIRTABLE_TOKEN,
   });
-  const base = Airtable.base(import.meta.env.AIRTABLE_BASE_ID);
+  const base = Airtable.base(
+    import.meta.env.AIRTABLE_BASE_ID || import.meta.env.PUBLIC_AIRTABLE_BASE_ID
+  );
   const table = base(tableName);
 
   return table;
@@ -20,17 +23,17 @@ function getTable(tableName: string) {
 
 function parsePageNameToId(name: string): string {
   const pages: { [key: string]: string } = {
-    home: "rectl3gyPcfBv8zXG",
-    quote: "reczqsp0N4o9QUcSw",
-    termsAndConditions: "recmHMCGhMU8LWJyE",
-    404: "recTciXyoKAAzUhDa",
+    home: 'rectl3gyPcfBv8zXG',
+    quote: 'reczqsp0N4o9QUcSw',
+    termsAndConditions: 'recmHMCGhMU8LWJyE',
+    404: 'recTciXyoKAAzUhDa',
   };
 
   return pages[name];
 }
 
 async function getContent(pageName: string): Promise<Content> {
-  const table = getTable("content");
+  const table = getTable('content');
   let fields = {};
 
   try {
@@ -46,7 +49,7 @@ async function getContent(pageName: string): Promise<Content> {
 }
 
 async function getCredentials(): Promise<Credentials> {
-  const table = getTable("credentials");
+  const table = getTable('credentials');
   const fields: Credentials = {};
 
   try {
@@ -56,8 +59,8 @@ async function getCredentials(): Promise<Credentials> {
         if (
           record &&
           record.fields &&
-          typeof record.fields.key == "string" &&
-          typeof record.fields.value == "string"
+          typeof record.fields.key == 'string' &&
+          typeof record.fields.value == 'string'
         )
           fields[record.fields.key] = record.fields.value;
       });
@@ -69,4 +72,21 @@ async function getCredentials(): Promise<Credentials> {
   return fields;
 }
 
-export { getContent, getCredentials };
+interface SendQuoteRequestParams {
+  [key: string]: string;
+}
+
+async function sendQuoteRequest(payload: SendQuoteRequestParams) {
+  let response = null;
+  const table = getTable('orders');
+
+  try {
+    response = table.create([{ fields: payload }]);
+  } catch (err) {
+    console.log(err);
+  }
+
+  return response;
+}
+
+export { getContent, getCredentials, sendQuoteRequest };
