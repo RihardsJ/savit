@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+import { getContent } from '../services/airtable';
+
+const { seoTitle, seoDescription, title, body } = await getContent("404");
+---
+
+<Layout title={seoTitle} description={seoDescription}>
+	<main>
+      <h2>{title}</h2>
+      <p>{body}</p>
+      <a href="/">"HOME"</a>
+	</main>
+</Layout>
