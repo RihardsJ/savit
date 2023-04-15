@@ -1,14 +1,23 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import TextInput from './TextInput';
 import TickCircleIcon from '../icons/tickCircle';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-import { sendQuoteRequest } from '../services/airtable';
+import { sendQuoteRequest, getOrders } from '../services/airtable';
 
 function QuiteForm() {
+  const [reservedDates, setReservedDates] = useState<Date[]>([]);
   const [formState, setFormState] = useState({
     type: 'input',
     loading: false,
   });
+
+  useEffect(() => {
+    getOrders()
+      .then((dates) => setReservedDates(dates))
+      .catch((err) => console.log(err));
+  }, []);
 
   const FIELDS = {
     CURRENT_ADDRESS: {
@@ -103,12 +112,12 @@ function QuiteForm() {
   };
 
   const initialValues: InitialValuesInterface = {};
-  const CURRENT_DATE = new Date().toISOString().split('T')[0];
+  const CURRENT_DATE = new Date();
 
   Object.entries(FIELDS).forEach(([, value]) => {
     initialValues[value.SLUG] =
       value.SLUG == FIELDS.DATE.SLUG
-        ? CURRENT_DATE
+        ? CURRENT_DATE.toISOString()
         : value.SLUG == FIELDS.SIZE.SLUG
         ? '1'
         : '';
@@ -148,7 +157,7 @@ function QuiteForm() {
         </p>
         <p>
           The quote is going to be sent to your email:{' '}
-          <strong>(name.surname@gmail.com)</strong>
+          <strong>({formData[FIELDS.EMAIL.SLUG]})</strong>
         </p>
         <a href="/">
           <TickCircleIcon />
@@ -190,14 +199,16 @@ function QuiteForm() {
         updateValue={dispatch}
       />
       <label htmlFor={FIELDS.DATE.SLUG}>{FIELDS.DATE.LABEL}</label>
-      <input
-        type="date"
-        id={FIELDS.DATE.SLUG}
-        name={FIELDS.DATE.SLUG}
-        defaultValue={CURRENT_DATE}
-        min={CURRENT_DATE}
-        onChange={(e) =>
-          dispatch({ type: FIELDS.DATE.SLUG, value: e.target.value })
+      <DatePicker
+        dateFormat="dd/MM/yyyy"
+        selected={new Date(formData[FIELDS.DATE.SLUG])}
+        minDate={CURRENT_DATE}
+        excludeDates={[...reservedDates]}
+        onChange={(date: Date) =>
+          dispatch({
+            type: FIELDS.DATE.SLUG,
+            value: date.toISOString().split('T')[0],
+          })
         }
       />
       <label htmlFor={FIELDS.SIZE.SLUG}>{FIELDS.SIZE.LABEL}</label>

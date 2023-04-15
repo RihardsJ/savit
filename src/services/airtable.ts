@@ -72,6 +72,35 @@ async function getCredentials(): Promise<Credentials> {
   return fields;
 }
 
+async function getOrders(): Promise<Date[]> {
+  const table = getTable('orders');
+  const orders: Date[] = [];
+
+  try {
+    const records = await table
+      .select({
+        filterByFormula: "OR(status = 'confirmed', status = 'block')",
+      })
+      .all();
+    if (records && !!records.length) {
+      records.forEach((record) => {
+        if (
+          record &&
+          record.fields &&
+          record.fields.date &&
+          typeof record.fields.date == 'string'
+        )
+          orders.push(new Date(record.fields.date));
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  console.log(orders);
+  return orders;
+}
+
 interface SendQuoteRequestParams {
   [key: string]: string;
 }
@@ -89,4 +118,4 @@ async function sendQuoteRequest(payload: SendQuoteRequestParams) {
   return response;
 }
 
-export { getContent, getCredentials, sendQuoteRequest };
+export { getContent, getCredentials, getOrders, sendQuoteRequest };
