@@ -34,7 +34,7 @@ function QuiteForm() {
     SIZE: { LABEL: 'Moving size:', SLUG: 'bedrooms' },
     INSTRUCTIONS: {
       LABEL: 'Special instructions:',
-      SLUG: 'instructions',
+      SLUG: 'Instructions',
       PLACEHOLDER:
         'Please list special requirements e.g. limited parking / storage / antique furniture etc.',
     },
@@ -183,7 +183,10 @@ function QuiteForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col w-2/4 bg-formBG/[0.6] p-4 rounded-md"
+    >
       <TextInput
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
         label={FIELDS.CURRENT_ADDRESS.LABEL}
@@ -198,7 +201,9 @@ function QuiteForm() {
         value={formData[FIELDS.NEW_ADDRESS.SLUG]}
         updateValue={dispatch}
       />
-      <label htmlFor={FIELDS.DATE.SLUG}>{FIELDS.DATE.LABEL}</label>
+      <label htmlFor={FIELDS.DATE.SLUG} className="text-2xl my-1">
+        {FIELDS.DATE.LABEL}
+      </label>
       <DatePicker
         dateFormat="dd/MM/yyyy"
         selected={new Date(formData[FIELDS.DATE.SLUG])}
@@ -211,19 +216,22 @@ function QuiteForm() {
           })
         }
       />
-      <label htmlFor={FIELDS.SIZE.SLUG}>{FIELDS.SIZE.LABEL}</label>
+      <label htmlFor={FIELDS.SIZE.SLUG} className="text-2xl my-1">
+        {FIELDS.SIZE.LABEL}
+      </label>
       <select
         name={FIELDS.SIZE.SLUG}
         id={FIELDS.SIZE.SLUG}
         onChange={(e) =>
           dispatch({ type: FIELDS.SIZE.SLUG, value: e.target.value })
         }
+        className="bg-transparent border-2 border-solid border-grey rounded-md p-2"
       >
         {[...new Array(9)].map((_, i) => (
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
-      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG}>
+      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className="text-2xl my-1">
         {FIELDS.INSTRUCTIONS.SLUG}
       </label>
       <textarea
@@ -235,6 +243,7 @@ function QuiteForm() {
         onChange={(e) =>
           dispatch({ type: FIELDS.INSTRUCTIONS.SLUG, value: e.target.value })
         }
+        className="bg-transparent placeholder-grey p-2 border-2 border-solid border-grey"
       />
       <TextInput
         slug={FIELDS.NAME.SLUG}
@@ -254,7 +263,11 @@ function QuiteForm() {
         value={formData[FIELDS.PHONE.SLUG]}
         updateValue={dispatch}
       />
-      <button type="submit" disabled={formState.loading}>
+      <button
+        type="submit"
+        disabled={formState.loading}
+        className="bg-brown text-white my-2 p-3"
+      >
         Request a price
       </button>
     </form>

@@ -22,7 +22,9 @@ function TextInput({
 }: InputProps) {
   return (
     <>
-      <label htmlFor={slug}>{label}</label>
+      <label htmlFor={slug} className="text-2xl my-1">
+        {label}
+      </label>
       <input
         type="text"
         id={slug}
@@ -31,6 +33,7 @@ function TextInput({
         required
         value={value}
         onChange={(e) => updateValue({ type: slug, value: e.target.value })}
+        className="bg-transparent placeholder-grey border-solid border-2 border-grey p-1 rounded-md"
       />
     </>
   );

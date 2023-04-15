@@ -10,12 +10,15 @@ const { phone, email } = await getCredentials();
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-	<main>
-      <h2>{title}</h2>
-      <p>{body}</p>
-    <aside>
-      <p><PhoneIcon />{phone}</p>
-      <p><MailIcon />{email}</p>
-    </aside>
+	<main class="flex flex-row">
+      <div class="w-2/4">
+        <h2 class="text-5xl my-8">{title}</h2>
+        <p class="text-1xl font-semibold my-8">{body}</p>
+        <p class="m-14"><a href="/quote" class="rounded-md bg-brown text-white p-6">Request a quote</a></p>
+      </div>
+      <ul >
+        <li class="flex flex-row"><PhoneIcon /><a href={`tel:${phone}`} class="text-7xl font-semibold p-2 hover:underline">{phone}</a></li>
+        <li class="flex flex-row"><MailIcon /><a href={`mailto:${email}`} class="text-7xl font-semibold p-2 hover:underline">{email}</a></li>
+      </ul>
 	</main>
 </Layout>
