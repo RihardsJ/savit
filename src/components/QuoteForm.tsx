@@ -185,7 +185,7 @@ function QuiteForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col w-2/4 bg-formBG/[0.6] p-4 rounded-md"
+      className="flex flex-col w-2/4 bg-formBG/[0.6] p-4 rounded-sm"
     >
       <TextInput
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
@@ -201,10 +201,11 @@ function QuiteForm() {
         value={formData[FIELDS.NEW_ADDRESS.SLUG]}
         updateValue={dispatch}
       />
-      <label htmlFor={FIELDS.DATE.SLUG} className="text-2xl my-1">
+      <label htmlFor={FIELDS.DATE.SLUG} className="text-xl my-1">
         {FIELDS.DATE.LABEL}
       </label>
       <DatePicker
+        className="bg-transparent border p-1"
         dateFormat="dd/MM/yyyy"
         selected={new Date(formData[FIELDS.DATE.SLUG])}
         minDate={CURRENT_DATE}
@@ -216,7 +217,7 @@ function QuiteForm() {
           })
         }
       />
-      <label htmlFor={FIELDS.SIZE.SLUG} className="text-2xl my-1">
+      <label htmlFor={FIELDS.SIZE.SLUG} className="text-xl my-1">
         {FIELDS.SIZE.LABEL}
       </label>
       <select
@@ -225,13 +226,13 @@ function QuiteForm() {
         onChange={(e) =>
           dispatch({ type: FIELDS.SIZE.SLUG, value: e.target.value })
         }
-        className="bg-transparent border-2 border-solid border-grey rounded-md p-2"
+        className="bg-transparent border border-solid border-grey  p-2"
       >
         {[...new Array(9)].map((_, i) => (
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
-      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className="text-2xl my-1">
+      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className="text-xl my-1">
         {FIELDS.INSTRUCTIONS.SLUG}
       </label>
       <textarea
@@ -243,7 +244,7 @@ function QuiteForm() {
         onChange={(e) =>
           dispatch({ type: FIELDS.INSTRUCTIONS.SLUG, value: e.target.value })
         }
-        className="bg-transparent placeholder-grey p-2 border-2 border-solid border-grey"
+        className="bg-transparent placeholder-grey p-2 border border-solid border-grey"
       />
       <TextInput
         slug={FIELDS.NAME.SLUG}
@@ -266,7 +267,7 @@ function QuiteForm() {
       <button
         type="submit"
         disabled={formState.loading}
-        className="bg-brown text-white my-2 p-3"
+        className="bg-brown text-white my-2 p-3 w-3/4 text-2xl self-center rounded-sm"
       >
         Request a price
       </button>
