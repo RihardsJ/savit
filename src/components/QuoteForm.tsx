@@ -1,8 +1,8 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import TextInput from './TextInput';
 import TickCircleIcon from '../icons/tickCircle';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 import { sendQuoteRequest, getOrders } from '../services/airtable';
 
@@ -18,6 +18,8 @@ function QuiteForm() {
       .then((dates) => setReservedDates(dates))
       .catch((err) => console.log(err));
   }, []);
+
+  const TODAY = new Date();
 
   const FIELDS = {
     CURRENT_ADDRESS: {
@@ -44,16 +46,12 @@ function QuiteForm() {
   };
 
   interface StateInterface {
-    [key: string]: string;
+    [key: string]: string | Date;
   }
 
   interface ActionInterface {
-    value: string;
+    value: string | Date;
     type: string;
-  }
-
-  interface InitialValuesInterface {
-    [key: string]: string;
   }
 
   const reducer = (state: StateInterface, action: ActionInterface) => {
@@ -111,16 +109,10 @@ function QuiteForm() {
     }
   };
 
-  const initialValues: InitialValuesInterface = {};
-  const CURRENT_DATE = new Date();
-
-  Object.entries(FIELDS).forEach(([, value]) => {
-    initialValues[value.SLUG] =
-      value.SLUG == FIELDS.DATE.SLUG
-        ? CURRENT_DATE.toISOString()
-        : value.SLUG == FIELDS.SIZE.SLUG
-        ? '1'
-        : '';
+  const initialValues: StateInterface = {};
+  Object.entries(FIELDS).forEach(([, { SLUG }]) => {
+    initialValues[SLUG] =
+      SLUG == FIELDS.DATE.SLUG ? TODAY : SLUG == FIELDS.SIZE.SLUG ? '1' : '';
   });
 
   const [formData, dispatch] = useReducer(reducer, initialValues);
@@ -128,7 +120,8 @@ function QuiteForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     setFormState((prevState) => ({ ...prevState, lading: true }));
-    sendQuoteRequest(formData)
+    const date = formData.date as Date;
+    sendQuoteRequest({ ...formData, date: date.toISOString().split('T')[0] })
       .then(() => {
         setFormState((prevState) => ({ ...prevState, type: 'success' }));
         console.log('quote sent!');
@@ -146,7 +139,7 @@ function QuiteForm() {
     return (
       <div>
         <p>
-          All good <strong>Username!</strong>
+          All good <strong>{formData[FIELDS.NAME.SLUG] as string}!</strong>
         </p>
         <p>
           Thank you for considering our services for your upcoming house move!
@@ -157,7 +150,7 @@ function QuiteForm() {
         </p>
         <p>
           The quote is going to be sent to your email:{' '}
-          <strong>({formData[FIELDS.EMAIL.SLUG]})</strong>
+          <strong>({formData[FIELDS.EMAIL.SLUG] as string})</strong>
         </p>
         <a href="/">
           <TickCircleIcon />
@@ -182,6 +175,26 @@ function QuiteForm() {
     );
   }
 
+  console.log('date: ', new Date(formData[FIELDS.DATE.SLUG]));
+
+  const datePickStyle = `
+ .rdp-day_selected { 
+    font-weight: bold; 
+    background-color: #bf7e3a;
+  }
+  .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+    background-color: #bf7e3a;
+  }
+  .rdp-day_selected:hover{
+    background-color: #bf7e3a;
+  }
+  .rdp-button:hover:not([disabled]) { 
+    border-color: white;
+    color: white;
+    opacity: 0.7;
+  }
+`;
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -191,32 +204,19 @@ function QuiteForm() {
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
         label={FIELDS.CURRENT_ADDRESS.LABEL}
         placeholder={FIELDS.CURRENT_ADDRESS.PLACEHOLDER}
-        value={formData[FIELDS.CURRENT_ADDRESS.SLUG]}
+        value={formData[FIELDS.CURRENT_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.NEW_ADDRESS.SLUG}
         label={FIELDS.NEW_ADDRESS.LABEL}
         placeholder={FIELDS.NEW_ADDRESS.PLACEHOLDER}
-        value={formData[FIELDS.NEW_ADDRESS.SLUG]}
+        value={formData[FIELDS.NEW_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
       <label htmlFor={FIELDS.DATE.SLUG} className="text-xl my-1">
         {FIELDS.DATE.LABEL}
       </label>
-      <DatePicker
-        className="bg-transparent border p-1"
-        dateFormat="dd/MM/yyyy"
-        selected={new Date(formData[FIELDS.DATE.SLUG])}
-        minDate={CURRENT_DATE}
-        excludeDates={[...reservedDates]}
-        onChange={(date: Date) =>
-          dispatch({
-            type: FIELDS.DATE.SLUG,
-            value: date.toISOString().split('T')[0],
-          })
-        }
-      />
       <label htmlFor={FIELDS.SIZE.SLUG} className="text-xl my-1">
         {FIELDS.SIZE.LABEL}
       </label>
@@ -232,8 +232,23 @@ function QuiteForm() {
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
+
+      <label htmlFor={FIELDS.DATE.SLUG} className="text-xl my-1">
+        {FIELDS.DATE.LABEL}
+      </label>
+      <style>{datePickStyle}</style>
+      <DayPicker
+        mode="single"
+        required
+        fromDate={TODAY}
+        disabled={reservedDates}
+        selected={new Date(formData[FIELDS.DATE.SLUG])}
+        onDayClick={(date) => {
+          dispatch({ type: FIELDS.DATE.SLUG, value: date });
+        }}
+      />
       <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className="text-xl my-1">
-        {FIELDS.INSTRUCTIONS.SLUG}
+        {FIELDS.INSTRUCTIONS.LABEL}
       </label>
       <textarea
         id={FIELDS.INSTRUCTIONS.SLUG}
@@ -249,19 +264,19 @@ function QuiteForm() {
       <TextInput
         slug={FIELDS.NAME.SLUG}
         label={FIELDS.NAME.LABEL}
-        value={formData[FIELDS.NAME.SLUG]}
+        value={formData[FIELDS.NAME.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.EMAIL.SLUG}
         label={FIELDS.EMAIL.LABEL}
-        value={formData[FIELDS.EMAIL.SLUG]}
+        value={formData[FIELDS.EMAIL.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.PHONE.SLUG}
         label={FIELDS.PHONE.LABEL}
-        value={formData[FIELDS.PHONE.SLUG]}
+        value={formData[FIELDS.PHONE.SLUG] as string}
         updateValue={dispatch}
       />
       <button
