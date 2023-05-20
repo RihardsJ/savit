@@ -34,7 +34,7 @@ function QuiteForm() {
     SIZE: { LABEL: 'Moving size:', SLUG: 'bedrooms' },
     INSTRUCTIONS: {
       LABEL: 'Special instructions:',
-      SLUG: 'Instructions',
+      SLUG: 'instructions',
       PLACEHOLDER:
         'Please list special requirements e.g. limited parking / storage / antique furniture etc.',
     },
