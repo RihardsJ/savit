@@ -1,9 +1,7 @@
 import React, { useReducer, useState, useEffect } from 'react';
+import DatePicker from './DatePicker';
 import TextInput from './TextInput';
 import TickCircleIcon from '../../icons/tickCircle';
-
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
 
 import configs from '../../configs';
 
@@ -12,8 +10,8 @@ import { sendQuoteRequest, getOrders } from '../../services/airtable';
 const {
   FIELDS,
   TODAY,
-  STYLE: { DATEPICKER_CSS, CLASSNAME },
-  STATUS: { SUCCSESS, FAIL },
+  STYLE: { CLASSNAME },
+  STATUS: { SUCCESS, FAIL },
 } = configs;
 
 function QuoteForm() {
@@ -107,7 +105,7 @@ function QuoteForm() {
     const date = formData.date as Date;
     sendQuoteRequest({ ...formData, date: date.toISOString().split('T')[0] })
       .then(() => {
-        setFormState((prevState) => ({ ...prevState, type: SUCCSESS }));
+        setFormState((prevState) => ({ ...prevState, type: SUCCESS }));
         console.log('quote sent!');
       })
       .catch((error) => {
@@ -119,9 +117,9 @@ function QuoteForm() {
       );
   };
 
-  if (formState.type === SUCCSESS) {
+  if (formState.type === SUCCESS) {
     return (
-      <div>
+      <div className={CLASSNAME.FORM_SUBMIT_MESSAGE}>
         <p>
           All good <strong>{formData[FIELDS.NAME.SLUG] as string}!</strong>
         </p>
@@ -136,7 +134,7 @@ function QuoteForm() {
           The quote is going to be sent to your email:{' '}
           <strong>({formData[FIELDS.EMAIL.SLUG] as string})</strong>
         </p>
-        <a href="/">
+        <a href="/" className={`${CLASSNAME.HOME_BUTTON}`}>
           <TickCircleIcon />
         </a>
       </div>
@@ -145,7 +143,7 @@ function QuoteForm() {
 
   if (formState.type === FAIL) {
     return (
-      <div>
+      <div className={CLASSNAME.FORM_SUBMIT_MESSAGE}>
         <p>Ooops!</p>
         <p>Thank you for reaching out to us about your house move.</p>
         <p>
@@ -154,7 +152,9 @@ function QuoteForm() {
           our email.
         </p>
         <p>We apologize for the inconvenience!</p>
-        <a href="/quote/">Try again!</a>
+        <a href="/quote/" className={CLASSNAME.QUOTE_BUTTON}>
+          Try again!
+        </a>
       </div>
     );
   }
@@ -175,9 +175,13 @@ function QuoteForm() {
         value={formData[FIELDS.NEW_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
-      <label htmlFor={FIELDS.DATE.SLUG} className={CLASSNAME.LABEL}>
-        {FIELDS.DATE.LABEL}
-      </label>
+      <DatePicker
+        selectedDate={new Date(formData[FIELDS.DATE.SLUG])}
+        reservedDates={reservedDates}
+        changeDate={(date: Date) => {
+          dispatch({ type: FIELDS.DATE.SLUG, value: date });
+        }}
+      />
       <label htmlFor={FIELDS.SIZE.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.SIZE.LABEL}
       </label>
@@ -193,21 +197,6 @@ function QuoteForm() {
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
-
-      <label htmlFor={FIELDS.DATE.SLUG} className={CLASSNAME.LABEL}>
-        {FIELDS.DATE.LABEL}
-      </label>
-      <style>{DATEPICKER_CSS}</style>
-      <DayPicker
-        mode="single"
-        required
-        fromDate={TODAY}
-        disabled={reservedDates}
-        selected={new Date(formData[FIELDS.DATE.SLUG])}
-        onDayClick={(date) => {
-          dispatch({ type: FIELDS.DATE.SLUG, value: date });
-        }}
-      />
       <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.INSTRUCTIONS.LABEL}
       </label>

@@ -3,22 +3,34 @@ import Layout from '../layouts/Layout.astro';
 import PhoneIcon from '../icons/phone';
 import MailIcon from '../icons/mail';
 
-import { getContent, getCredentials} from '../services/airtable';
+import configs from '../configs';
 
-const { seoTitle, seoDescription, title, body } = await getContent("home");
+import { getContent, getCredentials } from '../services/airtable';
+
+const { seoTitle, seoDescription, title, body } = await getContent('home');
 const { phone, email } = await getCredentials();
+
+const {
+  STYLE: { CLASSNAME },
+} = configs;
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-	<main class="flex flex-row">
-      <div class="w-2/4">
-        <h2 class="text-5xl my-8">{title}</h2>
-        <p class="text-1xl font-semibold my-8">{body}</p>
-        <p class="m-14"><a href="/quote" class="rounded-md bg-brown text-white p-6">Request a quote</a></p>
-      </div>
-      <ul >
-        <li class="flex flex-row"><PhoneIcon /><a href={`tel:${phone}`} class="text-7xl font-semibold p-2 hover:underline">{phone}</a></li>
-        <li class="flex flex-row"><MailIcon /><a href={`mailto:${email}`} class="text-7xl font-semibold p-2 hover:underline">{email}</a></li>
-      </ul>
-	</main>
+  <main class={CLASSNAME.FLEX.COLUMN}>
+    <h2 class={CLASSNAME.TITLE}>{title}</h2>
+    <p class={CLASSNAME.TEXT}>{body}</p>
+    <ul>
+      <li class={CLASSNAME.FLEX.ROW}>
+        <PhoneIcon /><a href={`tel:${phone}`} class={CLASSNAME.CONTACT}
+          >{phone}</a>
+      </li>
+      <li class={CLASSNAME.FLEX.ROW}>
+        <MailIcon /><a href={`mailto:${email}`} class={CLASSNAME.CONTACT}
+          >{email}</a>
+      </li>
+    </ul>
+    <p class="m-14">
+      <a href="/quote" class={CLASSNAME.QUOTE_BUTTON}>Request a quote</a>
+    </p>
+  </main>
 </Layout>

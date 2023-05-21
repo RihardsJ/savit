@@ -1,13 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+import configs from "../configs";
 import { getContent } from '../services/airtable';
 
+const { STYLE: {CLASSNAME }} = configs;  
 const { seoTitle, seoDescription, title, body } = await getContent("termsAndConditions");
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
   <main>
-      <h2 class="my-2 text-5xl font-semibold">{title}</h2>
-      <p class="text-2xl">{body}</p>
+      <h2 class={CLASSNAME.TITLE}>{title}</h2>
+      <p class={`${CLASSNAME.TEXT} max-w-xl`}>{body}</p>
   </main>
 </Layout>
