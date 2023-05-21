@@ -1,12 +1,22 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import TextInput from './TextInput';
-import TickCircleIcon from '../icons/tickCircle';
+import TickCircleIcon from '../../icons/tickCircle';
+
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
-import { sendQuoteRequest, getOrders } from '../services/airtable';
+import configs from '../../configs';
 
-function QuiteForm() {
+import { sendQuoteRequest, getOrders } from '../../services/airtable';
+
+const {
+  FIELDS,
+  TODAY,
+  STYLE: { DATEPICKER_CSS, CLASSNAME },
+  STATUS: { SUCCSESS, FAIL },
+} = configs;
+
+function QuoteForm() {
   const [reservedDates, setReservedDates] = useState<Date[]>([]);
   const [formState, setFormState] = useState({
     type: 'input',
@@ -19,42 +29,16 @@ function QuiteForm() {
       .catch((err) => console.log(err));
   }, []);
 
-  const TODAY = new Date();
-
-  const FIELDS = {
-    CURRENT_ADDRESS: {
-      LABEL: 'Current Address:',
-      SLUG: 'current-address',
-      PLACEHOLDER: 'Start typing the address or postcode...',
-    },
-    NEW_ADDRESS: {
-      LABEL: 'New address:',
-      SLUG: 'new-address',
-      PLACEHOLDER: 'Start typing the address or postcode...',
-    },
-    DATE: { LABEL: 'Estimated moving date:', SLUG: 'date' },
-    SIZE: { LABEL: 'Moving size:', SLUG: 'bedrooms' },
-    INSTRUCTIONS: {
-      LABEL: 'Special instructions:',
-      SLUG: 'instructions',
-      PLACEHOLDER:
-        'Please list special requirements e.g. limited parking / storage / antique furniture etc.',
-    },
-    NAME: { LABEL: 'Your name:', SLUG: 'name' },
-    EMAIL: { LABEL: 'Email:', SLUG: 'email' },
-    PHONE: { LABEL: 'Phone Number:', SLUG: 'phone' },
-  };
-
   interface StateInterface {
     [key: string]: string | Date;
   }
 
-  interface ActionInterface {
+  interface ReducerActionInterface {
     value: string | Date;
     type: string;
   }
 
-  const reducer = (state: StateInterface, action: ActionInterface) => {
+  const reducer = (state: StateInterface, action: ReducerActionInterface) => {
     switch (action.type) {
       case FIELDS.CURRENT_ADDRESS.SLUG: {
         return {
@@ -105,7 +89,7 @@ function QuiteForm() {
         };
       }
       default:
-        return state;
+        throw Error('Unknown action: ' + action.type);
     }
   };
 
@@ -123,11 +107,11 @@ function QuiteForm() {
     const date = formData.date as Date;
     sendQuoteRequest({ ...formData, date: date.toISOString().split('T')[0] })
       .then(() => {
-        setFormState((prevState) => ({ ...prevState, type: 'success' }));
+        setFormState((prevState) => ({ ...prevState, type: SUCCSESS }));
         console.log('quote sent!');
       })
       .catch((error) => {
-        setFormState((prevState) => ({ ...prevState, type: 'fail' }));
+        setFormState((prevState) => ({ ...prevState, type: FAIL }));
         console.log('Error! email has not been sent!', error);
       })
       .finally(() =>
@@ -135,7 +119,7 @@ function QuiteForm() {
       );
   };
 
-  if (formState.type === 'success') {
+  if (formState.type === SUCCSESS) {
     return (
       <div>
         <p>
@@ -159,7 +143,7 @@ function QuiteForm() {
     );
   }
 
-  if (formState.type === 'fail') {
+  if (formState.type === FAIL) {
     return (
       <div>
         <p>Ooops!</p>
@@ -175,31 +159,8 @@ function QuiteForm() {
     );
   }
 
-  console.log('date: ', new Date(formData[FIELDS.DATE.SLUG]));
-
-  const datePickStyle = `
- .rdp-day_selected { 
-    font-weight: bold; 
-    background-color: #bf7e3a;
-  }
-  .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-    background-color: #bf7e3a;
-  }
-  .rdp-day_selected:hover{
-    background-color: #bf7e3a;
-  }
-  .rdp-button:hover:not([disabled]) { 
-    border-color: white;
-    color: white;
-    opacity: 0.7;
-  }
-`;
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col w-2/4 bg-formBG/[0.6] p-4 rounded-sm"
-    >
+    <form onSubmit={handleSubmit} className={CLASSNAME.FORM}>
       <TextInput
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
         label={FIELDS.CURRENT_ADDRESS.LABEL}
@@ -214,29 +175,29 @@ function QuiteForm() {
         value={formData[FIELDS.NEW_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
-      <label htmlFor={FIELDS.DATE.SLUG} className="text-xl my-1">
+      <label htmlFor={FIELDS.DATE.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.DATE.LABEL}
       </label>
-      <label htmlFor={FIELDS.SIZE.SLUG} className="text-xl my-1">
+      <label htmlFor={FIELDS.SIZE.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.SIZE.LABEL}
       </label>
       <select
         name={FIELDS.SIZE.SLUG}
         id={FIELDS.SIZE.SLUG}
+        className={CLASSNAME.SELECT}
         onChange={(e) =>
           dispatch({ type: FIELDS.SIZE.SLUG, value: e.target.value })
         }
-        className="bg-transparent border border-solid border-grey  p-2"
       >
         {[...new Array(9)].map((_, i) => (
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
 
-      <label htmlFor={FIELDS.DATE.SLUG} className="text-xl my-1">
+      <label htmlFor={FIELDS.DATE.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.DATE.LABEL}
       </label>
-      <style>{datePickStyle}</style>
+      <style>{DATEPICKER_CSS}</style>
       <DayPicker
         mode="single"
         required
@@ -247,7 +208,7 @@ function QuiteForm() {
           dispatch({ type: FIELDS.DATE.SLUG, value: date });
         }}
       />
-      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className="text-xl my-1">
+      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className={CLASSNAME.LABEL}>
         {FIELDS.INSTRUCTIONS.LABEL}
       </label>
       <textarea
@@ -255,11 +216,11 @@ function QuiteForm() {
         name={FIELDS.INSTRUCTIONS.SLUG}
         rows={4}
         cols={43}
+        className={CLASSNAME.TEXT_INPUT}
         placeholder={FIELDS.INSTRUCTIONS.PLACEHOLDER}
         onChange={(e) =>
           dispatch({ type: FIELDS.INSTRUCTIONS.SLUG, value: e.target.value })
         }
-        className="bg-transparent placeholder-grey p-2 border border-solid border-grey"
       />
       <TextInput
         slug={FIELDS.NAME.SLUG}
@@ -282,7 +243,7 @@ function QuiteForm() {
       <button
         type="submit"
         disabled={formState.loading}
-        className="bg-brown text-white my-2 p-3 w-3/4 text-2xl self-center rounded-sm"
+        className={CLASSNAME.FORM_BUTTON}
       >
         Request a price
       </button>
@@ -290,4 +251,4 @@ function QuiteForm() {
   );
 }
 
-export default QuiteForm;
+export default QuoteForm;
