@@ -1,0 +1,32 @@
+---
+import { getCredentials} from '../services/airtable';
+const { name } = await getCredentials();
+---
+
+<button id="navigation_button" class="lg:hidden">x</button> 
+<nav id="navigation_menu" class="hidden">
+  <h1 class="text-brown text-8xl font-semibold">{name} second menu</h1>
+  <ul>
+    <a href="/" class="align-middle text-3xl  mx-2.5 hover:underline">Home</a>
+    <a href="/quote" class="align-middle text-3xl mx-2.5 hover:underline">Quote</a>
+    <a href="/terms-and-conditions" class="align-middle text-3xl mx-2.5 hover:underline">Terms and Conditions</a>
+  </ul>
+</nav>
+
+<script>
+  let state = 'initial';
+  const  navigation_menu = document.getElementById("navigation_menu");
+  const  navigation_button = document.getElementById("navigation_button");
+
+  function handleClick () {
+    if(state === 'open' || state === 'initial') {
+      navigation_menu && (navigation_menu.style.display = "block");
+      state = 'closed';
+    } else {
+      navigation_menu && (navigation_menu.style.display = "none");
+      state = 'open';
+    }
+  }
+
+  navigation_button && (navigation_button.addEventListener("click", handleClick));
+</script>

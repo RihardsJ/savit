@@ -29,6 +29,7 @@ const STATUS = {
 
 const STYLE = {
   CLASSNAME: {
+    MAIN_TAG: 'max-h-[80vh] overflow-y-auto',
     CONTACT: 'text-3xl font-semibold p-2 hover:underline',
     QUOTE_BUTTON:
       'rounded-md bg-brown text-center text-2xl text-white p-6 rounded-lg my-4',

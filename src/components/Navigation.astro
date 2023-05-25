@@ -3,7 +3,7 @@ import { getCredentials} from '../services/airtable';
 const { name } = await getCredentials();
 ---
 
-<nav class="flex justify-between">
+<nav class="flex justify-between max-lg:hidden">
   <h1 class="text-brown text-8xl font-semibold">{name}</h1>
   <ul>
     <a href="/" class="align-middle text-3xl  mx-2.5 hover:underline">Home</a>

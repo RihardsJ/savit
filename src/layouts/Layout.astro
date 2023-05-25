@@ -1,5 +1,6 @@
 ---
 import Navigation from '../components/Navigation.astro';
+import SmallNavigation from '../components/SmallNavigation.astro';
 
 export interface Props {
   description: string,
@@ -23,10 +24,11 @@ const { title, description } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet"> 
 		<title>{title}</title>
 	</head>
-  <header>
+  <header >
     <Navigation/>
+    <SmallNavigation />
   </header>
-	<body>
+  <body>
 		<slot />
 	</body>
 </html>

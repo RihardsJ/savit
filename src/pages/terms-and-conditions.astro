@@ -9,7 +9,7 @@ const { seoTitle, seoDescription, title, body } = await getContent("termsAndCond
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-  <main>
+  <main class={CLASSNAME.MAIN_TAG}>
       <h2 class={CLASSNAME.TITLE}>{title}</h2>
       <p class={`${CLASSNAME.TEXT} max-w-xl`}>{body}</p>
   </main>
