@@ -1,34 +1,44 @@
 ---
 import Navigation from '../components/Navigation.astro';
-import SmallNavigation from '../components/SmallNavigation.astro';
+import BurgerNavigation from '../components/BurgerNavigation.astro';
 
 export interface Props {
-  description: string,
-	title: string;
+  description: string;
+  title: string;
 }
 
 const { title, description } = Astro.props;
+import configs from '../configs';
+
+const {
+  STYLE: { CLASSNAME },
+} = configs;
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="font-raleway bg-savit bg-bottom bg-no-repeat bg-cover h-screen text-grey px-12 py-10">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
-    <meta name="author" content="Savit">
-		<link rel="icon" href="/favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet"> 
-		<title>{title}</title>
-	</head>
-  <header >
-    <Navigation/>
-    <SmallNavigation />
+<html lang="en" class={CLASSNAME.GLOBAL_STYLING}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Savit" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <header>
+    <Navigation />
+    <BurgerNavigation />
   </header>
   <body>
-		<slot />
-	</body>
+    <slot />
+  </body>
+
+
 </html>

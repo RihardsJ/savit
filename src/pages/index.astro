@@ -19,18 +19,23 @@ const {
   <main class={CLASSNAME.FLEX.COLUMN}>
     <h2 class={CLASSNAME.TITLE}>{title}</h2>
     <p class={CLASSNAME.TEXT}>{body}</p>
-    <ul>
+    <ul class="max-sm:bg-sky max-sm:mb-4 max-sm:p-2">
       <li class={CLASSNAME.FLEX.ROW}>
-        <PhoneIcon /><a href={`tel:${phone}`} class={CLASSNAME.CONTACT}
-          >{phone}</a>
+        <PhoneIcon /><a
+          href={`tel:${phone}`}
+          class={`max-sm:text-xl ${CLASSNAME.CONTACT}`}>{phone}</a
+        >
       </li>
       <li class={CLASSNAME.FLEX.ROW}>
-        <MailIcon /><a href={`mailto:${email}`} class={CLASSNAME.CONTACT}
-          >{email}</a>
+        <MailIcon />
+        <a
+          href={`mailto:${email}`}
+          class={`max-sm:text-xl ${CLASSNAME.CONTACT}`}>{email}</a
+        >
       </li>
     </ul>
-    <p class="m-14">
-      <a href="/quote" class={CLASSNAME.QUOTE_BUTTON}>Request a quote</a>
-    </p>
+      <p class="m-14 max-sm:m-4">
+        <a href="/quote" class={CLASSNAME.QUOTE_BUTTON}>Request a quote</a>
+      </p>
   </main>
 </Layout>
