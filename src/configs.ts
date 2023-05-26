@@ -29,6 +29,8 @@ const STATUS = {
 
 const STYLE = {
   CLASSNAME: {
+    LINE: 'border-solid border-2 transition-transform duration-300 ease-in-out w-full',
+    BURGER_MENU_LINK: 'text-3xl mx-2.5 hover:underline',
     MAIN_TAG: 'max-h-[80vh] overflow-y-auto',
     CONTACT: 'text-3xl font-semibold p-2 hover:underline',
     QUOTE_BUTTON:

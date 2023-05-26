@@ -8,6 +8,7 @@ module.exports = {
       white: 'white',
       brown: '#BF7E3A',
       grey: '#3D3F3E',
+      sky: '#9fafaf',
       formBG: '#D3D3D1',
     },
     backgroundImage: {
