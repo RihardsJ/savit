@@ -1,4 +1,8 @@
-import React from 'react';
+import configs from '../../configs';
+
+const {
+  STYLE: { CLASSNAME },
+} = configs;
 
 interface UpdateValue {
   type: string;
@@ -22,7 +26,9 @@ function TextInput({
 }: InputProps) {
   return (
     <>
-      <label htmlFor={slug}>{label}</label>
+      <label htmlFor={slug} className={CLASSNAME.LABEL}>
+        {label}
+      </label>
       <input
         type="text"
         id={slug}
@@ -31,6 +37,7 @@ function TextInput({
         required
         value={value}
         onChange={(e) => updateValue({ type: slug, value: e.target.value })}
+        className={CLASSNAME.TEXT_INPUT}
       />
     </>
   );

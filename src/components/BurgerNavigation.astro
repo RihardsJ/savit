@@ -1,0 +1,53 @@
+---
+import { getCredentials} from '../services/airtable';
+import configs  from '../configs';
+
+const { name } = await getCredentials();
+const { STYLE: { CLASSNAME } } = configs;
+
+---
+
+<button id="navigation_button" class="lg:hidden fixed top-8 right-8 z-50 flex flex-col justify-between w-8 h-8">
+  <span class={CLASSNAME.LINE}></span>
+  <span class={CLASSNAME.LINE}></span>
+  <span class={CLASSNAME.LINE}></span>
+</button> 
+<nav id="navigation_menu" class="hidden bg-sky h-full w-full fixed flex justify-center pt-8 top-0 left-0">
+  <h1 class="text-brown text-4xl text-center font-semibold">{name}</h1>
+  <ul class="flex flex-col pt-10">
+    <li class="mb-2 flex justify-center"><a href="/" class={CLASSNAME.BURGER_MENU_LINK}>Home</a></li>
+    <li class="mb-2 flex justify-center"><a href="/quote" class={CLASSNAME.BURGER_MENU_LINK}>Quote</a></li>
+    <li class="flex justify-center"><a href="/terms-and-conditions" class={CLASSNAME.BURGER_MENU_LINK}>Terms & Conditions</a></li>
+  </ul>
+</nav>
+
+<script>
+  let state = 'initial';
+  const  navigation_menu = document.getElementById("navigation_menu");
+  const  navigation_button = document.getElementById("navigation_button");
+  const [line1, line2, line3] = (navigation_button?.children as unknown) as HTMLElement[] || []; 
+
+  function handleClick () {
+    if(state === 'open' || state === 'initial') {
+      // updates burger buttton
+      line1.style.transform= 'translateY(14px) rotate(45deg)'
+      line2.style.opacity = "0"
+      line3.style.transform= 'translateY(-14px) rotate(-45deg)'
+      // shows navigation menu
+      navigation_menu && (navigation_menu.style.display = "block");
+      // updates menu state
+      state = 'closed';
+    } else {
+      // updates burger button
+      line1.style.transform= 'translateY(0) rotate(0)'
+      line2.style.opacity = "1"
+      line3.style.transform= 'translateY(0) rotate(0)'
+      // hides navigation menu
+      navigation_menu && (navigation_menu.style.display = "none");
+      // updates menu state
+      state = 'open';
+    }
+  }
+
+  navigation_button && (navigation_button.addEventListener("click", handleClick));
+</script>

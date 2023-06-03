@@ -1,13 +1,21 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro';
+
+import configs from '../configs';
 import { getContent } from '../services/airtable';
 
-const { seoTitle, seoDescription, title, body } = await getContent("termsAndConditions");
+const {
+  STYLE: { CLASSNAME },
+} = configs;
+const { seoTitle, seoDescription, title, body } = await getContent(
+  'termsAndConditions'
+);
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-  <main>
-      <h2>{title}</h2>
-      <p>{body}</p>
+  <main class={CLASSNAME.MAIN_TAG}>
+    <div class={CLASSNAME.SKY_OVERLAY}></div>
+    <h2 class={CLASSNAME.TITLE}>{title}</h2>
+    <p class={`${CLASSNAME.TEXT} max-w-xl`}>{body}</p>
   </main>
 </Layout>

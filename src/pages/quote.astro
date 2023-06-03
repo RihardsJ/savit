@@ -2,15 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import QuoteForm from '../components/QuoteForm'
 
+import configs from '../configs';
+
 import { getContent } from '../services/airtable';
 
-const { seoTitle, seoDescription, title, body } = await getContent('quote');
+const { seoTitle, seoDescription } = await getContent('quote');
+const { STYLE: {CLASSNAME }} = configs;  
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-  <main>
-    <h2>{title}</h2>
-    <p>{body}</p>
+  <main class={CLASSNAME.MAIN_TAG}>
     <QuoteForm client:load/>
   </main>
 </Layout>

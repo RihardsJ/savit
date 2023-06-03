@@ -1,12 +1,20 @@
 import React, { useReducer, useState, useEffect } from 'react';
+import DatePicker from './DatePicker';
 import TextInput from './TextInput';
-import TickCircleIcon from '../icons/tickCircle';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import TickCircleIcon from '../../icons/tickCircle';
 
-import { sendQuoteRequest, getOrders } from '../services/airtable';
+import configs from '../../configs';
 
-function QuiteForm() {
+import { sendQuoteRequest, getOrders } from '../../services/airtable';
+
+const {
+  FIELDS,
+  TODAY,
+  STYLE: { CLASSNAME },
+  STATUS: { SUCCESS, FAIL },
+} = configs;
+
+function QuoteForm() {
   const [reservedDates, setReservedDates] = useState<Date[]>([]);
   const [formState, setFormState] = useState({
     type: 'input',
@@ -19,44 +27,16 @@ function QuiteForm() {
       .catch((err) => console.log(err));
   }, []);
 
-  const FIELDS = {
-    CURRENT_ADDRESS: {
-      LABEL: 'Current Address:',
-      SLUG: 'current-address',
-      PLACEHOLDER: 'Start typing the address or postcode...',
-    },
-    NEW_ADDRESS: {
-      LABEL: 'New address:',
-      SLUG: 'new-address',
-      PLACEHOLDER: 'Start typing the address or postcode...',
-    },
-    DATE: { LABEL: 'Estimated moving date:', SLUG: 'date' },
-    SIZE: { LABEL: 'Moving size:', SLUG: 'bedrooms' },
-    INSTRUCTIONS: {
-      LABEL: 'Special instructions:',
-      SLUG: 'instructions',
-      PLACEHOLDER:
-        'Please list special requirements e.g. limited parking / storage / antique furniture etc.',
-    },
-    NAME: { LABEL: 'Your name:', SLUG: 'name' },
-    EMAIL: { LABEL: 'Email:', SLUG: 'email' },
-    PHONE: { LABEL: 'Phone Number:', SLUG: 'phone' },
-  };
-
   interface StateInterface {
-    [key: string]: string;
+    [key: string]: string | Date;
   }
 
-  interface ActionInterface {
-    value: string;
+  interface ReducerActionInterface {
+    value: string | Date;
     type: string;
   }
 
-  interface InitialValuesInterface {
-    [key: string]: string;
-  }
-
-  const reducer = (state: StateInterface, action: ActionInterface) => {
+  const reducer = (state: StateInterface, action: ReducerActionInterface) => {
     switch (action.type) {
       case FIELDS.CURRENT_ADDRESS.SLUG: {
         return {
@@ -107,20 +87,14 @@ function QuiteForm() {
         };
       }
       default:
-        return state;
+        throw Error('Unknown action: ' + action.type);
     }
   };
 
-  const initialValues: InitialValuesInterface = {};
-  const CURRENT_DATE = new Date();
-
-  Object.entries(FIELDS).forEach(([, value]) => {
-    initialValues[value.SLUG] =
-      value.SLUG == FIELDS.DATE.SLUG
-        ? CURRENT_DATE.toISOString()
-        : value.SLUG == FIELDS.SIZE.SLUG
-        ? '1'
-        : '';
+  const initialValues: StateInterface = {};
+  Object.entries(FIELDS).forEach(([, { SLUG }]) => {
+    initialValues[SLUG] =
+      SLUG == FIELDS.DATE.SLUG ? TODAY : SLUG == FIELDS.SIZE.SLUG ? '1' : '';
   });
 
   const [formData, dispatch] = useReducer(reducer, initialValues);
@@ -128,13 +102,14 @@ function QuiteForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     setFormState((prevState) => ({ ...prevState, lading: true }));
-    sendQuoteRequest(formData)
+    const date = formData.date as Date;
+    sendQuoteRequest({ ...formData, date: date.toISOString().split('T')[0] })
       .then(() => {
-        setFormState((prevState) => ({ ...prevState, type: 'success' }));
+        setFormState((prevState) => ({ ...prevState, type: SUCCESS }));
         console.log('quote sent!');
       })
       .catch((error) => {
-        setFormState((prevState) => ({ ...prevState, type: 'fail' }));
+        setFormState((prevState) => ({ ...prevState, type: FAIL }));
         console.log('Error! email has not been sent!', error);
       })
       .finally(() =>
@@ -142,11 +117,11 @@ function QuiteForm() {
       );
   };
 
-  if (formState.type === 'success') {
+  if (formState.type === SUCCESS) {
     return (
-      <div>
+      <div className={CLASSNAME.FORM_SUBMIT_MESSAGE}>
         <p>
-          All good <strong>Username!</strong>
+          All good <strong>{formData[FIELDS.NAME.SLUG] as string}!</strong>
         </p>
         <p>
           Thank you for considering our services for your upcoming house move!
@@ -157,18 +132,18 @@ function QuiteForm() {
         </p>
         <p>
           The quote is going to be sent to your email:{' '}
-          <strong>({formData[FIELDS.EMAIL.SLUG]})</strong>
+          <strong>({formData[FIELDS.EMAIL.SLUG] as string})</strong>
         </p>
-        <a href="/">
+        <a href="/" className={`${CLASSNAME.HOME_BUTTON}`}>
           <TickCircleIcon />
         </a>
       </div>
     );
   }
 
-  if (formState.type === 'fail') {
+  if (formState.type === FAIL) {
     return (
-      <div>
+      <div className={CLASSNAME.FORM_SUBMIT_MESSAGE}>
         <p>Ooops!</p>
         <p>Thank you for reaching out to us about your house move.</p>
         <p>
@@ -177,44 +152,43 @@ function QuiteForm() {
           our email.
         </p>
         <p>We apologize for the inconvenience!</p>
-        <a href="/quote/">Try again!</a>
+        <a href="/quote/" className={CLASSNAME.QUOTE_BUTTON}>
+          Try again!
+        </a>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={CLASSNAME.FORM}>
       <TextInput
         slug={FIELDS.CURRENT_ADDRESS.SLUG}
         label={FIELDS.CURRENT_ADDRESS.LABEL}
         placeholder={FIELDS.CURRENT_ADDRESS.PLACEHOLDER}
-        value={formData[FIELDS.CURRENT_ADDRESS.SLUG]}
+        value={formData[FIELDS.CURRENT_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.NEW_ADDRESS.SLUG}
         label={FIELDS.NEW_ADDRESS.LABEL}
         placeholder={FIELDS.NEW_ADDRESS.PLACEHOLDER}
-        value={formData[FIELDS.NEW_ADDRESS.SLUG]}
+        value={formData[FIELDS.NEW_ADDRESS.SLUG] as string}
         updateValue={dispatch}
       />
-      <label htmlFor={FIELDS.DATE.SLUG}>{FIELDS.DATE.LABEL}</label>
       <DatePicker
-        dateFormat="dd/MM/yyyy"
-        selected={new Date(formData[FIELDS.DATE.SLUG])}
-        minDate={CURRENT_DATE}
-        excludeDates={[...reservedDates]}
-        onChange={(date: Date) =>
-          dispatch({
-            type: FIELDS.DATE.SLUG,
-            value: date.toISOString().split('T')[0],
-          })
-        }
+        selectedDate={new Date(formData[FIELDS.DATE.SLUG])}
+        reservedDates={reservedDates}
+        changeDate={(date: Date) => {
+          dispatch({ type: FIELDS.DATE.SLUG, value: date });
+        }}
       />
-      <label htmlFor={FIELDS.SIZE.SLUG}>{FIELDS.SIZE.LABEL}</label>
+      <label htmlFor={FIELDS.SIZE.SLUG} className={CLASSNAME.LABEL}>
+        {FIELDS.SIZE.LABEL}
+      </label>
       <select
         name={FIELDS.SIZE.SLUG}
         id={FIELDS.SIZE.SLUG}
+        className={CLASSNAME.SELECT}
         onChange={(e) =>
           dispatch({ type: FIELDS.SIZE.SLUG, value: e.target.value })
         }
@@ -223,14 +197,15 @@ function QuiteForm() {
           <option key={i + 1} value={i + 1}>{`${i + 1} Bedrooms`}</option>
         ))}
       </select>
-      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG}>
-        {FIELDS.INSTRUCTIONS.SLUG}
+      <label htmlFor={FIELDS.INSTRUCTIONS.SLUG} className={CLASSNAME.LABEL}>
+        {FIELDS.INSTRUCTIONS.LABEL}
       </label>
       <textarea
         id={FIELDS.INSTRUCTIONS.SLUG}
         name={FIELDS.INSTRUCTIONS.SLUG}
         rows={4}
         cols={43}
+        className={CLASSNAME.TEXT_INPUT}
         placeholder={FIELDS.INSTRUCTIONS.PLACEHOLDER}
         onChange={(e) =>
           dispatch({ type: FIELDS.INSTRUCTIONS.SLUG, value: e.target.value })
@@ -239,26 +214,30 @@ function QuiteForm() {
       <TextInput
         slug={FIELDS.NAME.SLUG}
         label={FIELDS.NAME.LABEL}
-        value={formData[FIELDS.NAME.SLUG]}
+        value={formData[FIELDS.NAME.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.EMAIL.SLUG}
         label={FIELDS.EMAIL.LABEL}
-        value={formData[FIELDS.EMAIL.SLUG]}
+        value={formData[FIELDS.EMAIL.SLUG] as string}
         updateValue={dispatch}
       />
       <TextInput
         slug={FIELDS.PHONE.SLUG}
         label={FIELDS.PHONE.LABEL}
-        value={formData[FIELDS.PHONE.SLUG]}
+        value={formData[FIELDS.PHONE.SLUG] as string}
         updateValue={dispatch}
       />
-      <button type="submit" disabled={formState.loading}>
+      <button
+        type="submit"
+        disabled={formState.loading}
+        className={CLASSNAME.FORM_BUTTON}
+      >
         Request a price
       </button>
     </form>
   );
 }
 
-export default QuiteForm;
+export default QuoteForm;

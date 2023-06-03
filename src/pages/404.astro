@@ -3,13 +3,16 @@ import Layout from '../layouts/Layout.astro';
 
 import { getContent } from '../services/airtable';
 
+import configs from '../configs';
+
 const { seoTitle, seoDescription, title, body } = await getContent("404");
+const { STYLE: {CLASSNAME} } = configs;
 ---
 
 <Layout title={seoTitle} description={seoDescription}>
-	<main>
-      <h2>{title}</h2>
-      <p>{body}</p>
-      <a href="/">"HOME"</a>
+	<main class={CLASSNAME.MAIN_TAG}>
+      <h2 class={CLASSNAME.TITLE}>{title}</h2>
+      <p class={CLASSNAME.TEXT}>{body}</p>
+      <a href="/" class={CLASSNAME.HOME_BUTTON}>Home</a>
 	</main>
 </Layout>
