@@ -40,7 +40,7 @@ const STYLE = {
     HOME_BUTTON:
       'flex justify-center text-white text-2xl bg-brown rounded-md w-40 p-2 my-4',
     FORM_SUBMIT_MESSAGE:
-      'flex flex-col w-2/6 text-2xl bg-formBG/[0.6] p-4 rounded-sm',
+      'flex flex-col w-2/6 text-2xl bg-formBG/[0.6] p-4 rounded-sm max-lg:w-full max-sm:text-xl max-lg:items-center',
     FORM_BUTTON:
       'bg-brown text-white my-2 p-3 w-3/4 text-2xl self-center rounded-sm',
     FORM: 'flex flex-col lg:w-2/4 bg-formBG/[0.6] p-4 rounded-sm',
