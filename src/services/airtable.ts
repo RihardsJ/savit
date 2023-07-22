@@ -23,10 +23,10 @@ function getTable(tableName: string) {
 
 function parsePageNameToId(name: string): string {
   const pages: { [key: string]: string } = {
-    home: 'rectl3gyPcfBv8zXG',
-    quote: 'reczqsp0N4o9QUcSw',
-    termsAndConditions: 'recmHMCGhMU8LWJyE',
-    404: 'recTciXyoKAAzUhDa',
+    home: 'recnm7j1xNyr6Sgd2',
+    quote: 'recn87SuVd6OtxlCz',
+    termsAndConditions: 'recNVaw1AWiJt5rK2',
+    404: 'rec1yhFwIeCEHMdfO',
   };
 
   return pages[name];
